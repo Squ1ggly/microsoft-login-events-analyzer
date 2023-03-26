@@ -99,10 +99,94 @@ async function getIpLocations(loginEvents) {
   // This will return the ip addresses with locations
   return await batchSearchIPAdd(removeGarbageIps);
 }
+
+/**
+ * 
+ * @param {*} LoginEvents 
+ * @returns 
+ */
+function loginEventsBreakdown(LoginEvents) {
+  // Initialize the return values
+  const returnValue = {
+    total_number_of_logins: LoginEvents.length,
+    user_info: {},
+  };
+
+  for (const login of LoginEvents) {
+    // As we loop through the login events, check to see if the user object has been created. If not create it
+    if (!returnValue.user_info[login.UserId]) {
+      returnValue.user_info[login.UserId] = {
+        number_of_logins: 0,
+        login_locations: new Map(),
+      };
+    }
+
+    // Plus 1 to the number of logins 
+    returnValue.user_info[login.UserId].number_of_logins += 1;
+
+    // Set the location key to be the city of the current login
+    const locationKey = login.city;
+    // Attempt to get the locationData using the location key
+    let locationData = returnValue.user_info[login.UserId].login_locations.get(locationKey);
+    // If the location is not found, create a new entry
+    if (!locationData) {
+      locationData = {
+        country: login.country,
+        region: login.region,
+        city: login.city,
+        number_of_logins: 0,
+      };
+    }
+
+    // Plus 1 to the login count for the location
+    locationData.number_of_logins += 1;
+    // Now set the login location against the user object 
+    returnValue.user_info[login.UserId].login_locations.set(locationKey, locationData);
+  }
+
+  // Turn the login_locations map into a normal array
+  for (const userId in returnValue.user_info) {
+    const user = returnValue.user_info[userId];
+    user.login_locations = Array.from(user.login_locations.values());
+  }
+
+  return returnValue;
+}
+
+
+function formatLoginEventsBreakdownAsCsv(data) {
+  let csv = '';
+  
+  // Add headers to the CSV
+  csv += 'User Email,Number of Logins\n';
+
+  // Loop through each user and add their info to the CSV
+  for (const [userEmail, user] of Object.entries(data.user_info)) {
+    const numLogins = user.number_of_logins;
+
+    // Add user email and number of logins to the CSV
+    csv += `${userEmail},${numLogins}\n`;
+
+    // Loop through each login location and add it to the CSV
+    for (const location of user.login_locations) {
+      const country = location.country;
+      const region = location.region;
+      const city = location.city;
+      const numLocationLogins = location.number_of_logins;
+
+      // Add location details to the CSV
+      csv += `,${country},${region},${city},${numLocationLogins}\n`;
+    }
+  }
+
+  return csv;
+}
+
+
 // ----------------------------------End of helpers-----------------------------------
 
 // ----------------------------------Start Main Function-----------------------------------
-async function ConvertLoginEventsToCSV(loginEvents) {
+async function generateLoginEventBreakdown(loginEvents) {
   const file = [];
   const ipLocations = await getIpLocations(loginEvents);
 
@@ -130,6 +214,9 @@ async function ConvertLoginEventsToCSV(loginEvents) {
     });
   }
 
+  const breakDownDataJson = loginEventsBreakdown(file);
+  const breakDownDataCsv = formatLoginEventsBreakdownAsCsv(breakDownDataJson)
+
   const csv = await converter.json2csv(file, {});
 
   try {
@@ -138,8 +225,10 @@ async function ConvertLoginEventsToCSV(loginEvents) {
     console.log("Directory already exists, continuing");
   }
   fs.writeFileSync("./results/login_events.csv", csv);
+  fs.writeFileSync("./results/login_events_breakdown.csv", breakDownDataCsv);
+  fs.writeFileSync("./results/login_events_breakdown.json", JSON.stringify(breakDownDataJson, null, 2));
 }
 // ----------------------------------End Main Function-----------------------------------
 
 // ----------------------------------Execute the main function-----------------------------------
-(async () => await ConvertLoginEventsToCSV(loginEvents))();
+(async () => await generateLoginEventBreakdown(loginEvents))();
