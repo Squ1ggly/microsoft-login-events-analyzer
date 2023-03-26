@@ -1,11 +1,11 @@
 {
-  "name": "iplookupjs",
+  "name": "microsoft-login-events-analyzer",
   "version": "1.0.0",
-  "main": "User Logins .js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "node ./index.js"
   },
-  "author": "",
+  "author": "Squ1ggly",
   "license": "ISC",
   "dependencies": {
     "i": "^0.3.7",
