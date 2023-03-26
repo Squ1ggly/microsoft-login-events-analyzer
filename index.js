@@ -27,7 +27,7 @@ const loginEvents = require("./startingData/login_events.json"); // This file sh
 // ----------------------------------Start of helpers-----------------------------------
 /**
  * This function removed duplicate values in a string array
- * @param {string} strArr The string array you want to deduplicated
+ * @param {string[]} strArr The string array you want to deduplicated
  * @returns A new string array of the deduplicated values
  */
 function removeDuplicateValues(strArr) {
@@ -41,7 +41,7 @@ function removeDuplicateValues(strArr) {
 /**
  * This function takes an array of query ip addresses to return with location and other data
  * Check out the https://ip-api.com/docs for more info about what the heck is happening here
- * @param {object} query This is the query objects from
+ * @param {query[]} query This is the query objects from
  * @returns
  */
 async function batchSearchIPAdd(query) {
