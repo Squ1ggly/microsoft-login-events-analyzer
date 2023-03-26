@@ -111,6 +111,7 @@ async function ConvertLoginEventsToCSV(loginEvents) {
   for (const login of loginEvents) {
     const ipLocation = ipLocationMap[login?.ClientIP ?? null] || {};
 
+    // Add keys in here if you want to grab more stuff from the json
     file.push({
       UserId: login?.UserId ?? "",
       ClientIP: login?.ClientIP ?? "",
