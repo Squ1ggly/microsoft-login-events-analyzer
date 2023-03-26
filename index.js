@@ -101,9 +101,9 @@ async function getIpLocations(loginEvents) {
 }
 
 /**
- * 
- * @param {*} LoginEvents 
- * @returns 
+ *
+ * @param {*} LoginEvents
+ * @returns
  */
 function loginEventsBreakdown(LoginEvents) {
   // Initialize the return values
@@ -121,7 +121,7 @@ function loginEventsBreakdown(LoginEvents) {
       };
     }
 
-    // Plus 1 to the number of logins 
+    // Plus 1 to the number of logins
     returnValue.user_info[login.UserId].number_of_logins += 1;
 
     // Set the location key to be the city of the current login
@@ -140,7 +140,7 @@ function loginEventsBreakdown(LoginEvents) {
 
     // Plus 1 to the login count for the location
     locationData.number_of_logins += 1;
-    // Now set the login location against the user object 
+    // Now set the login location against the user object
     returnValue.user_info[login.UserId].login_locations.set(locationKey, locationData);
   }
 
@@ -153,12 +153,11 @@ function loginEventsBreakdown(LoginEvents) {
   return returnValue;
 }
 
-
 function formatLoginEventsBreakdownAsCsv(data) {
-  let csv = '';
-  
+  let csv = "";
+
   // Add headers to the CSV
-  csv += 'User Email,Number of Logins\n';
+  csv += "User Email,Number of Logins\n";
 
   // Loop through each user and add their info to the CSV
   for (const [userEmail, user] of Object.entries(data.user_info)) {
@@ -181,7 +180,6 @@ function formatLoginEventsBreakdownAsCsv(data) {
 
   return csv;
 }
-
 
 // ----------------------------------End of helpers-----------------------------------
 
@@ -215,7 +213,7 @@ async function generateLoginEventBreakdown(loginEvents) {
   }
 
   const breakDownDataJson = loginEventsBreakdown(file);
-  const breakDownDataCsv = formatLoginEventsBreakdownAsCsv(breakDownDataJson)
+  const breakDownDataCsv = formatLoginEventsBreakdownAsCsv(breakDownDataJson);
 
   const csv = await converter.json2csv(file, {});
 
