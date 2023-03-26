@@ -11,11 +11,15 @@ try {
 
 // Check if the data file exists
 if (!fs.existsSync("./startingData/login_events.json")) {
+  fs.writeFileSync("./startingData/login_events.json", "[]");
   console.log("Please input login events");
   return;
 }
 const loginEvents = require("./startingData/login_events.json"); // This file should be the extracted microsoft login events from the Compliance center
-
+if (loginEvents.length < 1) {
+  console.log("Please input login events");
+  return;
+}
 /**
    ______     __     ________     __                     __  _                 
   / ____/__  / /_   /  _/ __ \   / /   ____  _________ _/ /_(_)___  ____  _____
