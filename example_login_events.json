@@ -1,0 +1,125 @@
+[
+  {
+    "CreationTime": "2023-02-15T02:33:52",
+    "Id": "TemplateData",
+    "Operation": "UserLoggedIn",
+    "OrganizationId": "TemplateData",
+    "RecordType": 15,
+    "ResultStatus": "Success",
+    "UserKey": "TemplateData",
+    "UserType": 0,
+    "Version": 1,
+    "Workload": "AzureActiveDirectory",
+    "ClientIP": "TemplateData",
+    "ObjectId": "TemplateData",
+    "UserId": "TemplateData",
+    "AzureActiveDirectoryEventType": 1,
+    "ExtendedProperties": [
+      { "Name": "ResultStatusDetail", "Value": "Redirect" },
+      { "Name": "UserAgent", "Value": "TemplateData" },
+      { "Name": "RequestType", "Value": "OAuth2:Authorize" }
+    ],
+    "ModifiedProperties": [],
+    "Actor": [
+      { "ID": "TemplateData", "Type": 0 },
+      { "ID": "TemplateData", "Type": 5 }
+    ],
+    "ActorContextId": "TemplateData",
+    "ActorIpAddress": "TemplateData",
+    "InterSystemsId": "TemplateData",
+    "IntraSystemId": "TemplateData",
+    "SupportTicketId": "",
+    "Target": [{ "ID": "TemplateData", "Type": 0 }],
+    "TargetContextId": "TemplateData",
+    "ApplicationId": "TemplateData",
+    "DeviceProperties": [
+      { "Name": "OS", "Value": "Windows 10" },
+      { "Name": "BrowserType", "Value": "Edge" },
+      { "Name": "IsCompliantAndManaged", "Value": "False" },
+      { "Name": "SessionId", "Value": "TemplateData" }
+    ],
+    "ErrorNumber": "0"
+  },
+  {
+    "CreationTime": "2023-02-15T02:33:52",
+    "Id": "TemplateData",
+    "Operation": "UserLoggedIn",
+    "OrganizationId": "TemplateData",
+    "RecordType": 15,
+    "ResultStatus": "Success",
+    "UserKey": "TemplateData",
+    "UserType": 0,
+    "Version": 1,
+    "Workload": "AzureActiveDirectory",
+    "ClientIP": "TemplateData",
+    "ObjectId": "TemplateData",
+    "UserId": "TemplateData",
+    "AzureActiveDirectoryEventType": 1,
+    "ExtendedProperties": [
+      { "Name": "ResultStatusDetail", "Value": "Redirect" },
+      { "Name": "UserAgent", "Value": "TemplateData" },
+      { "Name": "RequestType", "Value": "OAuth2:Authorize" }
+    ],
+    "ModifiedProperties": [],
+    "Actor": [
+      { "ID": "TemplateData", "Type": 0 },
+      { "ID": "TemplateData", "Type": 5 }
+    ],
+    "ActorContextId": "TemplateData",
+    "ActorIpAddress": "TemplateData",
+    "InterSystemsId": "TemplateData",
+    "IntraSystemId": "TemplateData",
+    "SupportTicketId": "",
+    "Target": [{ "ID": "TemplateData", "Type": 0 }],
+    "TargetContextId": "TemplateData",
+    "ApplicationId": "TemplateData",
+    "DeviceProperties": [
+      { "Name": "OS", "Value": "Windows 10" },
+      { "Name": "BrowserType", "Value": "Edge" },
+      { "Name": "IsCompliantAndManaged", "Value": "False" },
+      { "Name": "SessionId", "Value": "TemplateData" }
+    ],
+    "ErrorNumber": "0"
+  },
+  {
+    "CreationTime": "2023-02-15T02:33:52",
+    "Id": "TemplateData",
+    "Operation": "UserLoggedIn",
+    "OrganizationId": "TemplateData",
+    "RecordType": 15,
+    "ResultStatus": "Success",
+    "UserKey": "TemplateData",
+    "UserType": 0,
+    "Version": 1,
+    "Workload": "AzureActiveDirectory",
+    "ClientIP": "TemplateData",
+    "ObjectId": "TemplateData",
+    "UserId": "TemplateData",
+    "AzureActiveDirectoryEventType": 1,
+    "ExtendedProperties": [
+      { "Name": "ResultStatusDetail", "Value": "Redirect" },
+      { "Name": "UserAgent", "Value": "TemplateData" },
+      { "Name": "RequestType", "Value": "OAuth2:Authorize" }
+    ],
+    "ModifiedProperties": [],
+    "Actor": [
+      { "ID": "TemplateData", "Type": 0 },
+      { "ID": "TemplateData", "Type": 5 }
+    ],
+    "ActorContextId": "TemplateData",
+    "ActorIpAddress": "TemplateData",
+    "InterSystemsId": "TemplateData",
+    "IntraSystemId": "TemplateData",
+    "SupportTicketId": "",
+    "Target": [{ "ID": "TemplateData", "Type": 0 }],
+    "TargetContextId": "TemplateData",
+    "ApplicationId": "TemplateData",
+    "DeviceProperties": [
+      { "Name": "OS", "Value": "Windows 10" },
+      { "Name": "BrowserType", "Value": "Edge" },
+      { "Name": "IsCompliantAndManaged", "Value": "False" },
+      { "Name": "SessionId", "Value": "TemplateData" }
+    ],
+    "ErrorNumber": "0"
+  }
+]
