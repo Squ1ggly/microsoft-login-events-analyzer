@@ -7,11 +7,10 @@
   },
   "author": "Squ1ggly",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
-    "i": "^0.3.7",
-    "isomorphic-fetch": "^3.0.0",
     "json-2-csv": "^4.0.0",
-    "npm": "^9.6.2"
+    "node-fetch": "^3.3.1"
   },
   "repository": {
     "type": "git",
