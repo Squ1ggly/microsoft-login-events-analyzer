@@ -61,6 +61,7 @@ export async function getIpLocations(LoginEvents) {
   return await batchFetchData(ipAddresses);
 }
 
+// Not sure what to do with these.
 /**
  * This function takes an array of Microsoft Compliance Login Events
  * @param {object[]} LoginEvents

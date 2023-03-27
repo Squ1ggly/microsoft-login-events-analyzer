@@ -1,7 +1,17 @@
-import { writeFileSync } from "fs";
+import fs from "fs";
 import { json2csv } from "json-2-csv";
-import loginEvents from "./startingData/login_events.json" assert { type: 'json' } ;
-import { getIpLocations, LoginEventsBreakdown, formatLoginEventsBreakdownAsCsv } from './functions/helper.js';
+import { getIpLocations, LoginEventsBreakdown, formatLoginEventsBreakdownAsCsv } from "./functions/helper.js";
+
+
+// Create Folders
+if(!fs.existsSync("./startingData")) {
+  fs.mkdirSync("./startingData");
+}
+if(!fs.existsSync("./results")) {
+  fs.mkdirSync("./results");
+}
+
+import loginEvents from "./startingData/login_events.json" assert { type: "json" };
 
 async function main(loginEvents) {
   const file = [];
@@ -32,9 +42,9 @@ async function main(loginEvents) {
   const breakDownDataCsv = formatLoginEventsBreakdownAsCsv(breakDownDataJson);
   const csv = await json2csv(file, {});
 
-  writeFileSync("./results/login_events.csv", csv);
-  writeFileSync("./results/login_events_breakdown.csv", breakDownDataCsv);
-  writeFileSync("./results/login_events_breakdown.json", JSON.stringify(breakDownDataJson, null, 2));
+  fs.writeFileSync("./results/login_events.csv", csv);
+  fs.writeFileSync("./results/login_events_breakdown.csv", breakDownDataCsv);
+  fs.writeFileSync("./results/login_events_breakdown.json", JSON.stringify(breakDownDataJson, null, 2));
 }
 // ----------------------------------End Main Function-----------------------------------
 
