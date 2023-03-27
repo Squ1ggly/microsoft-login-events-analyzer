@@ -2,7 +2,6 @@ import fs from "fs";
 import { json2csv } from "json-2-csv";
 import { getIpLocations, LoginEventsBreakdown, formatLoginEventsBreakdownAsCsv } from "./functions/helper.js";
 
-
 // Create Folders
 if(!fs.existsSync("./startingData")) {
   fs.mkdirSync("./startingData");
