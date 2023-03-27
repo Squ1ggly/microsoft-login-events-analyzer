@@ -53,7 +53,7 @@ export async function batchFetchData(ipAddresses) {
  */
 export async function getIpLocations(LoginEvents) {
   const ipAddresses = LoginEvents.reduce((prev, curr) => {
-    if (!prev.includes(curr.ClientIP)) {
+    if (!prev.includes(curr.ClientIP) && curr.ClientIP) {
       prev.push(curr.ClientIP);
     }
     return prev;
