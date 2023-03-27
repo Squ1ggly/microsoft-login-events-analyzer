@@ -67,7 +67,7 @@ export async function getIpLocations(LoginEvents) {
  * @param {object[]} LoginEvents
  * @returns A structured array
  */
-export function LoginEventsBreakdown(LoginEvents) {
+export function loginEventsBreakdown(LoginEvents) {
   const breakDown = {
     total_number_of_logins: LoginEvents.length,
     user_info: {},
