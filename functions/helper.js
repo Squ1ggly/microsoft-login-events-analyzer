@@ -107,7 +107,7 @@ export function loginEventsBreakdown(LoginEvents) {
 }
 
 /**
- * This function takes the output of the LoginEventsBreakdown, the function is required to to the unique shape of the data structure.
+ * This function takes the output of the LoginEventsBreakdown, the function is required for the unique shape of the data structure.
  * @param {object[]} data
  * @returns A specialized format CSV string.
  */
