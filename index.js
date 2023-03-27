@@ -2,24 +2,6 @@ const fs = require("fs"); // File system for writing files
 const fetch = require("isomorphic-fetch"); // isomorphic-fetch, cuz I'm used to it
 const converter = require("json-2-csv"); // To convert the json to csv
 
-// Initialize Project, make sure we are ready to continue
-try {
-  fs.mkdirSync("./startingData");
-} catch (err) {
-  console.log("Directory already exists, continuing");
-}
-
-// Check if the data file exists
-if (!fs.existsSync("./startingData/login_events.json")) {
-  fs.writeFileSync("./startingData/login_events.json", "[]");
-  console.log("Please input login events");
-  return;
-}
-const loginEvents = require("./startingData/login_events.json"); // This file should be the extracted microsoft login events from the Compliance center
-if (loginEvents.length < 1) {
-  console.log("Please input login events");
-  return;
-}
 /**
    ______     __     ________     __                     __  _                 
   / ____/__  / /_   /  _/ __ \   / /   ____  _________ _/ /_(_)___  ____  _____
@@ -29,11 +11,7 @@ if (loginEvents.length < 1) {
  */
 
 // ----------------------------------Start of helpers-----------------------------------
-/**
- * This function removed duplicate values in a string array
- * @param {string[]} strArr The string array you want to deduplicated
- * @returns A new string array of the deduplicated values
- */
+
 function removeDuplicateValues(strArr) {
   const foundSet = new Set();
   for (const str of strArr) {
@@ -42,24 +20,17 @@ function removeDuplicateValues(strArr) {
   return Array.from(foundSet);
 }
 
-/**
- * This function takes an array of query ip addresses to return with location and other data
- * Check out the https://ip-api.com/docs for more info about what the heck is happening here
- * @param {query[]} query This is the query objects from
- * @returns
- */
 async function batchSearchIPAdd(query) {
-  const batchSize = 25; // The size of the batches to smash the api with
-  const batchCount = Math.ceil(query.length / batchSize); // The total number of batches we are gonna make
-  const returnArray = []; // The return array of ip locations
+  const batchSize = 25;
+  const batchCount = Math.ceil(query.length / batchSize);
+  const returnArray = [];
 
-  // Get ip locations for batches
   for (let i = 0; i < batchCount; i++) {
-    const start = i * batchSize; // The start of the batch for each
-    const end = Math.min(start + batchSize, query.length); // The end of the batch
-    const batch = query.slice(start, end); // Slice the array so we have the current batch
+    const start = i * batchSize;
+    const end = Math.min(start + batchSize, query.length);
 
-    // Post to the api to get locations
+    const batch = query.slice(start, end);
+
     const res = await fetch("http://ip-api.com/batch", {
       "Content-Type": "application/json",
       method: "POST",
@@ -67,68 +38,43 @@ async function batchSearchIPAdd(query) {
     });
 
     if (res.ok) {
-      // Check the response was ok from the api
       const json = await res.json();
-      returnArray.push(...json); // Push array into return array
-    } else {
-      // Else we push the error
-      const resText = await res.text();
-      returnArray.push({ error: resText });
+      returnArray.push(...json);
+      continue;
     }
+    const resText = await res.text();
+    returnArray.push({ error: resText });
   }
-
   return returnArray;
 }
 
-/**
- * This function takes the login events exported from the microsoft compliance center
- * @param {Microsoft Login Events} loginEvents Exported microsoft login events from your tenant
- * @returns An array of IP Address locations
- */
 async function getIpLocations(loginEvents) {
-  const ips = loginEvents.map((e) => e.ClientIP); // Extract the ips from the array of login events
-  const uniqueIPs = removeDuplicateValues(ips); // Remove the duplicate ip addresses
+  const ips = loginEvents.map((e) => e.ClientIP);
+  const uniqueIPs = removeDuplicateValues(ips);
 
-  // Return array of query objects for use with the batchSearchIPAdd function
   const querys = uniqueIPs.map((e) => {
     return { query: e };
   });
 
-  // removes all the trash falsy values from the querys array
   const removeGarbageIps = querys.filter((e) => !!e.query);
-  // This will return the ip addresses with locations
   return await batchSearchIPAdd(removeGarbageIps);
 }
 
-/**
- *
- * @param {*} LoginEvents
- * @returns
- */
 function loginEventsBreakdown(LoginEvents) {
-  // Initialize the return values
   const returnValue = {
     total_number_of_logins: LoginEvents.length,
     user_info: {},
   };
-
   for (const login of LoginEvents) {
-    // As we loop through the login events, check to see if the user object has been created. If not create it
     if (!returnValue.user_info[login.UserId]) {
       returnValue.user_info[login.UserId] = {
         number_of_logins: 0,
         login_locations: new Map(),
       };
     }
-
-    // Plus 1 to the number of logins
     returnValue.user_info[login.UserId].number_of_logins += 1;
-
-    // Set the location key to be the city of the current login
     const locationKey = login.city;
-    // Attempt to get the locationData using the location key
     let locationData = returnValue.user_info[login.UserId].login_locations.get(locationKey);
-    // If the location is not found, create a new entry
     if (!locationData) {
       locationData = {
         country: login.country,
@@ -137,14 +83,10 @@ function loginEventsBreakdown(LoginEvents) {
         number_of_logins: 0,
       };
     }
-
-    // Plus 1 to the login count for the location
     locationData.number_of_logins += 1;
-    // Now set the login location against the user object
     returnValue.user_info[login.UserId].login_locations.set(locationKey, locationData);
   }
 
-  // Turn the login_locations map into a normal array
   for (const userId in returnValue.user_info) {
     const user = returnValue.user_info[userId];
     user.login_locations = Array.from(user.login_locations.values());
@@ -155,36 +97,26 @@ function loginEventsBreakdown(LoginEvents) {
 
 function formatLoginEventsBreakdownAsCsv(data) {
   let csv = "";
-
-  // Add headers to the CSV
   csv += "User Email,Number of Logins\n";
-
-  // Loop through each user and add their info to the CSV
   for (const [userEmail, user] of Object.entries(data.user_info)) {
     const numLogins = user.number_of_logins;
-
-    // Add user email and number of logins to the CSV
     csv += `${userEmail},${numLogins}\n`;
-
-    // Loop through each login location and add it to the CSV
     for (const location of user.login_locations) {
       const country = location.country;
       const region = location.region;
       const city = location.city;
       const numLocationLogins = location.number_of_logins;
-
-      // Add location details to the CSV
       csv += `,${country},${region},${city},${numLocationLogins}\n`;
     }
   }
-
   return csv;
 }
 
 // ----------------------------------End of helpers-----------------------------------
 
 // ----------------------------------Start Main Function-----------------------------------
-async function generateLoginEventBreakdown(loginEvents) {
+
+async function main(loginEvents) {
   const file = [];
   const ipLocations = await getIpLocations(loginEvents);
 
@@ -193,11 +125,8 @@ async function generateLoginEventBreakdown(loginEvents) {
     return map;
   }, {});
 
-  // Filter out garbage from loginEvents and add location data
   for (const login of loginEvents) {
     const ipLocation = ipLocationMap[login?.ClientIP ?? null] || {};
-
-    // Add keys in here if you want to grab more stuff from the json
     file.push({
       UserId: login?.UserId ?? "",
       ClientIP: login?.ClientIP ?? "",
@@ -214,14 +143,8 @@ async function generateLoginEventBreakdown(loginEvents) {
 
   const breakDownDataJson = loginEventsBreakdown(file);
   const breakDownDataCsv = formatLoginEventsBreakdownAsCsv(breakDownDataJson);
-
   const csv = await converter.json2csv(file, {});
 
-  try {
-    fs.mkdirSync("./results");
-  } catch (err) {
-    console.log("Directory already exists, continuing");
-  }
   fs.writeFileSync("./results/login_events.csv", csv);
   fs.writeFileSync("./results/login_events_breakdown.csv", breakDownDataCsv);
   fs.writeFileSync("./results/login_events_breakdown.json", JSON.stringify(breakDownDataJson, null, 2));
@@ -229,4 +152,4 @@ async function generateLoginEventBreakdown(loginEvents) {
 // ----------------------------------End Main Function-----------------------------------
 
 // ----------------------------------Execute the main function-----------------------------------
-(async () => await generateLoginEventBreakdown(loginEvents))();
+(async () => await main(loginEvents))();
